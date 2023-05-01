@@ -4,3 +4,6 @@ main: pl.throwtrails.ThrowTrails
 api-version: 1.19
 authors: [Assasin98980]
 description: Add trails to projectiles to your Minecraft server
+commands:
+  throwtrails:
+    description: Choose trail to your projectile

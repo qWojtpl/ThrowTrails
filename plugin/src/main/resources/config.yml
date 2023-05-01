@@ -1,0 +1,10 @@
+trails:
+  "heart":
+    loop: true
+    permission: throwtrails.use.heart
+    delay: 2
+    interval: 1
+    notApplies:
+      - TRIDENT
+    lifeCycle:
+      - HEART/0/0/0
