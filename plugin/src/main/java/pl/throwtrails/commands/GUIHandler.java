@@ -30,17 +30,13 @@ public class GUIHandler {
         String playerPreference = plugin.getDataHandler().getPreferences().getOrDefault(player.getName(), null);
         if(playerAvailableTrails.size() > 0) {
             int i = 0;
-            plugin.getLogger().info("size > 0");
             for(Trail t : playerAvailableTrails) {
                 ItemStack is = t.getIcon();
                 ItemMeta im = is.getItemMeta();
-                plugin.getLogger().info("trail " + t.getID());
                 if(im != null) {
                     im.setDisplayName("§e§l" + t.getID());
                     List<String> lore = new ArrayList<>();
-                    plugin.getLogger().info("name&lore");
                     if(t.getID().equals(playerPreference)) {
-                        plugin.getLogger().info("selected");
                         lore.add(" ");
                         lore.add("§aSELECTED!");
                     }

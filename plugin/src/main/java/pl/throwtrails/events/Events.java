@@ -1,7 +1,6 @@
 package pl.throwtrails.events;
 
 import lombok.Getter;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -29,12 +28,14 @@ public class Events implements Listener {
     public void onLaunch(ProjectileLaunchEvent event) {
         if(event.isCancelled()) return;
         if(!(event.getEntity().getShooter() instanceof Player)) return;
+        Player shooter = (Player) event.getEntity().getShooter();
         Projectile projectile = event.getEntity();
-        String preference = dataHandler.getPreferences().get(((Player) event.getEntity().getShooter()).getName());
+        String preference = dataHandler.getPreferences().get(shooter.getName());
         if(preference == null) return;
         Trail trail = plugin.getTrailsManager().getByName(preference);
         if(trail == null) return;
         if(trail.getNotApplies().contains(event.getEntity().getType().name())) return;
+        if(!shooter.hasPermission(trail.getPermission())) return;
         new ProjectileLaunch(projectile, trail);
     }
 

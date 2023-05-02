@@ -6,7 +6,6 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.Yaml;
 import pl.throwtrails.ThrowTrails;
 import pl.throwtrails.trails.Trail;
 import pl.throwtrails.trails.TrailParticle;
@@ -22,6 +21,7 @@ public class DataHandler {
 
     private final ThrowTrails plugin = ThrowTrails.getInstance();
     private final HashMap<String, String> preferences = new HashMap<>();
+    private YamlConfiguration preferencesYAML;
 
     public void loadConfig() {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
@@ -72,6 +72,7 @@ public class DataHandler {
     public void loadPreferences() {
         File dataFile = getDataFile();
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(dataFile);
+        preferencesYAML = yml;
         ConfigurationSection section = yml.getConfigurationSection("data");
         if(section == null) return;
         for(String player : section.getKeys(false)) {
@@ -81,14 +82,7 @@ public class DataHandler {
 
     public void setPreference(String player, String preference) {
         preferences.put(player, preference);
-        File dataFile = getDataFile();
-        YamlConfiguration yml = YamlConfiguration.loadConfiguration(dataFile);
-        yml.set("data." + player, preference);
-        try {
-            yml.save(dataFile);
-        } catch(IOException e) {
-            plugin.getLogger().severe("Cannot save data.yml!");
-        }
+        preferencesYAML.set("data." + player, preference);
     }
 
     public File getDataFile() {
@@ -100,9 +94,18 @@ public class DataHandler {
     }
 
     public void reload() {
+        save();
         preferences.clear();
         plugin.getTrailsManager().getTrails().clear();
         loadConfig();
+    }
+
+    public void save() {
+        try {
+            preferencesYAML.save(getDataFile());
+        } catch(IOException e) {
+            plugin.getLogger().severe("Cannot save data.yml! " + e.getMessage());
+        }
     }
 
 }

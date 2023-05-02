@@ -32,6 +32,7 @@ public final class ThrowTrails extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getDataHandler().save();
         getLogger().info("Disabled.");
     }
 
