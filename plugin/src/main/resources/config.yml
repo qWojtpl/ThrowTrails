@@ -1,5 +1,6 @@
 trails:
   "heart":
+    icon: POTION
     loop: true
     permission: throwtrails.use.heart
     delay: 2
@@ -7,4 +8,4 @@ trails:
     notApplies:
       - TRIDENT
     lifeCycle:
-      - HEART/0/0/0
+      - HEART
