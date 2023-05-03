@@ -20,6 +20,7 @@ public class DataHandler {
 
     private final ThrowTrails plugin = ThrowTrails.getInstance();
     private final HashMap<String, String> preferences = new HashMap<>();
+    private final HashMap<String, String> messages = new HashMap<>();
     private YamlConfiguration preferencesYAML;
 
     public void loadConfig() {
@@ -28,7 +29,13 @@ public class DataHandler {
             plugin.saveResource("config.yml", false);
         }
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(configFile);
-        ConfigurationSection section = yml.getConfigurationSection("trails");
+        ConfigurationSection section = yml.getConfigurationSection("messages");
+        if(section != null) {
+            for(String key : section.getKeys(false)) {
+                messages.put(key, yml.getString("messages." + key));
+            }
+        }
+        section = yml.getConfigurationSection("trails");
         if(section == null) return;
         for(String key : section.getKeys(false)) {
             String path = "trails." + key + ".";
@@ -94,6 +101,7 @@ public class DataHandler {
     public void reload() {
         save();
         preferences.clear();
+        messages.clear();
         plugin.getTrailsManager().getTrails().clear();
         loadConfig();
     }
@@ -104,6 +112,10 @@ public class DataHandler {
         } catch(IOException e) {
             plugin.getLogger().severe("Cannot save data.yml! " + e.getMessage());
         }
+    }
+
+    public String getMessage(String key) {
+        return messages.getOrDefault(key, "null").replace("&", "§");
     }
 
 }

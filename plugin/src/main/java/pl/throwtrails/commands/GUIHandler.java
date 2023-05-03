@@ -9,8 +9,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.throwtrails.ThrowTrails;
+import pl.throwtrails.data.DataHandler;
 import pl.throwtrails.trails.Trail;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 public class GUIHandler {
 
     private final ThrowTrails plugin = ThrowTrails.getInstance();
+    private final DataHandler dataHandler = plugin.getDataHandler();
     private final Player player;
     private final Inventory inventory;
     private int offset;
@@ -28,7 +31,7 @@ public class GUIHandler {
         player.closeInventory();
         this.player = player;
         this.playerAvailableTrails = getPlayerAvailableTrails();
-        this.inventory = Bukkit.createInventory(player, 45, "ThrowTrails");
+        this.inventory = Bukkit.createInventory(player, 45, dataHandler.getMessage("title"));
         player.openInventory(inventory);
         openGUI(0);
         plugin.getGUIManager().getGUIs().add(this);
@@ -51,21 +54,23 @@ public class GUIHandler {
                 }
                 if(i >= 36) break;
                 if(t.getID().equals(playerPreference)) {
-                    addItem(i, t.getIcon(), "§e§l" + t.getID(), " %nl%§aSELECTED!");
+                    addItem(i, t.getIcon(), "§e§l" + t.getID(), dataHandler.getMessage("selected"));
                 } else {
-                    addItem(i, t.getIcon(), "§e§l" + t.getID(), " %nl%§aCLICK TO SELECT!");
+                    addItem(i, t.getIcon(), "§e§l" + t.getID(), dataHandler.getMessage("clickToSelect"));
                 }
                 i++;
             }
             if(playerAvailableTrails.size() > offset + 36) {
-                addItem(44, Material.ARROW, "§fNext page", null);
+                addItem(44, Material.ARROW, dataHandler.getMessage("nextPage"), null);
             }
             if(offset >= 36) {
-                addItem(36, Material.ARROW, "§fPrevious page", null);
+                addItem(36, Material.ARROW, dataHandler.getMessage("previousPage"), null);
             }
-            addItem(40, Material.BARRIER, "§4Clear trails", "§cClear your trail preferences");
+            addItem(40, Material.BARRIER, dataHandler.getMessage("clearTrails"),
+                    dataHandler.getMessage("clearTrailsDescription"));
         } else {
-            addItem(22, Material.RED_STAINED_GLASS_PANE, "§4No trails", "§cYou don't have any trails!");
+            addItem(22, Material.RED_STAINED_GLASS_PANE, dataHandler.getMessage("noTrails"),
+                    dataHandler.getMessage("noTrailsDescription"));
         }
     }
 
@@ -96,7 +101,7 @@ public class GUIHandler {
         }
         if(slot == 40) {
             plugin.getDataHandler().setPreference(player.getName(), null);
-            player.sendMessage("§aYou successfully cleared your trail preferences!");
+            player.sendMessage(dataHandler.getMessage("clearTrail"));
             player.closeInventory();
             return;
         }
@@ -110,7 +115,7 @@ public class GUIHandler {
             }
             if(i == slot) {
                 plugin.getDataHandler().setPreference(player.getName(), t.getID());
-                player.sendMessage("§aYou set trail to: " + t.getID());
+                player.sendMessage(MessageFormat.format(dataHandler.getMessage("setTrail"), t.getID()));
                 player.closeInventory();
                 break;
             }

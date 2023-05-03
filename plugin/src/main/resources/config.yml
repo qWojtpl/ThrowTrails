@@ -1,3 +1,18 @@
+messages:
+  title: "ThrowTrails"
+  reload: "&aReloaded!"
+  mustBePlayer: "&cYou must be a player!"
+  selected: " %nl%&aSELECTED!"
+  clickToSelect: " %nl%&aCLICK TO SELECT!"
+  nextPage: "&fNext page"
+  previousPage: "&fPrevious page"
+  clearTrails: "&4Clear trails"
+  clearTrailsDescription: "&cClear your trail preferences"
+  noTrails: "&4No trails"
+  noTrailsDescription: "&cYou don't have any trails!"
+  setTrail: "&aYou set the trail to: {0}&a!"
+  clearTrail: "&aYou successfully cleared your trail preferences!"
+
 trails:
   "heart":
     icon: POTION

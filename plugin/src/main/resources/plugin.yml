@@ -7,3 +7,5 @@ description: Add trails to projectiles to your Minecraft server
 commands:
   throwtrails:
     description: Choose trail to your projectile
+    aliases:
+      - slady
