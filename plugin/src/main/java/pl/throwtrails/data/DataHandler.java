@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import pl.throwtrails.ThrowTrails;
 import pl.throwtrails.trails.Trail;
 import pl.throwtrails.trails.TrailParticle;
@@ -63,7 +62,7 @@ public class DataHandler {
                 lifeCycle.add(new TrailParticle(particles));
             }
             Trail trail = new Trail(key, icon, loop, permission, delay, interval, notApplies, lifeCycle);
-            plugin.getTrailsManager().getTrails().put(key, trail);
+            plugin.getTrailsManager().getTrails().add(trail);
         }
         loadPreferences();
     }

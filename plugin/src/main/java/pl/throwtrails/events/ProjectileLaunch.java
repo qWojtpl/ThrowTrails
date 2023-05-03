@@ -23,7 +23,7 @@ public class ProjectileLaunch {
             if(projectile.isDead()) plugin.getEvents().removeParticle(projectile);
             List<Particle> particles = trail.getLifeCycle().get(cycleCounter++).getParticles();
             for(Particle p : particles) {
-                projectile.getWorld().spawnParticle(p, projectile.getLocation(), 10);
+                projectile.getWorld().spawnParticle(p, projectile.getLocation(), 1);
             }
             if(cycleCounter >= trail.getLifeCycle().size()) {
                 if(trail.isLoop()) {

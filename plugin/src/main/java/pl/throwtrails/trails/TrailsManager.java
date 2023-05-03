@@ -3,16 +3,20 @@ package pl.throwtrails.trails;
 import lombok.Getter;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class TrailsManager {
 
-    private final HashMap<String, Trail> trails = new HashMap<>();
+    private final List<Trail> trails = new ArrayList<>();
 
     @Nullable
     public Trail getByName(String name) {
-        return trails.getOrDefault(name, null);
+        for(Trail t : trails) {
+            if(t.getID().equals(name)) return t;
+        }
+        return null;
     }
 
 }

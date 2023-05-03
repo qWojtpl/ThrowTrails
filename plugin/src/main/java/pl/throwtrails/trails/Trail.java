@@ -2,8 +2,6 @@ package pl.throwtrails.trails;
 
 import lombok.Getter;
 import org.bukkit.Material;
-import org.bukkit.entity.Projectile;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 

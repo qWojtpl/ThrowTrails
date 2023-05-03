@@ -3,6 +3,7 @@ package pl.throwtrails.commands;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.throwtrails.ThrowTrails;
 import pl.throwtrails.trails.Trail;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +36,7 @@ public class GUIHandler {
 
     public void openGUI(int offset) {
         this.offset = offset;
+        player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0F, 1.0F);
         for(int i = 0; i < 45; i++) {
             addItem(i, Material.LIGHT_GRAY_STAINED_GLASS_PANE, " ", null);
         }
@@ -99,6 +100,7 @@ public class GUIHandler {
             player.closeInventory();
             return;
         }
+        if(slot > 35) return;
         int i = 0;
         int offsetCount = 0;
         for(Trail t : playerAvailableTrails) {
@@ -118,8 +120,7 @@ public class GUIHandler {
 
     public List<Trail> getPlayerAvailableTrails() {
         List<Trail> playerAvailableTrails = new ArrayList<>();
-        for(String id : plugin.getTrailsManager().getTrails().keySet()) {
-            Trail t = plugin.getTrailsManager().getTrails().get(id);
+        for(Trail t : plugin.getTrailsManager().getTrails()) {
             if(!player.hasPermission(t.getPermission())) continue;
             playerAvailableTrails.add(t);
         }
