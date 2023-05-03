@@ -1,6 +1,7 @@
 package pl.throwtrails.trails;
 
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class Trail {
 
     private final String ID;
-    private final ItemStack icon;
+    private final Material icon;
     private final boolean loop;
     private final String permission;
     private final int delay;
@@ -18,7 +19,7 @@ public class Trail {
     private final List<String> notApplies;
     private final List<TrailParticle> lifeCycle;
 
-    public Trail(String ID, ItemStack icon, boolean loop, String permission, int delay, int interval,
+    public Trail(String ID, Material icon, boolean loop, String permission, int delay, int interval,
                  List<String> notApplies, List<TrailParticle> lifeCycle) {
         this.ID = ID;
         this.icon = icon;

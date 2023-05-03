@@ -12,78 +12,100 @@ import pl.throwtrails.trails.Trail;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
 public class GUIHandler {
 
     private final ThrowTrails plugin = ThrowTrails.getInstance();
-    private final List<Inventory> inventories = new ArrayList<>();
+    private final Player player;
+    private final Inventory inventory;
+    private int offset;
+    private final List<Trail> playerAvailableTrails;
 
-    public void openGUI(Player player) {
-        Inventory inventory = Bukkit.createInventory(player, 45, "ThrowTrails");
-        inventories.add(inventory);
+    public GUIHandler(Player player) {
+        player.closeInventory();
+        this.player = player;
+        this.playerAvailableTrails = getPlayerAvailableTrails();
+        this.inventory = Bukkit.createInventory(player, 45, "ThrowTrails");
+        player.openInventory(inventory);
+        openGUI(0);
+        plugin.getGUIManager().getGUIs().add(this);
+    }
+
+    public void openGUI(int offset) {
+        this.offset = offset;
         for(int i = 0; i < 45; i++) {
-            inventory.setItem(i, new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
+            addItem(i, Material.LIGHT_GRAY_STAINED_GLASS_PANE, " ", null);
         }
-        List<Trail> playerAvailableTrails = getPlayerAvailableTrails(player);
         String playerPreference = plugin.getDataHandler().getPreferences().getOrDefault(player.getName(), null);
         if(playerAvailableTrails.size() > 0) {
             int i = 0;
+            int offsetCount = 0;
             for(Trail t : playerAvailableTrails) {
-                ItemStack is = t.getIcon();
-                ItemMeta im = is.getItemMeta();
-                if(im != null) {
-                    im.setDisplayName("§e§l" + t.getID());
-                    List<String> lore = new ArrayList<>();
-                    if(t.getID().equals(playerPreference)) {
-                        lore.add(" ");
-                        lore.add("§aSELECTED!");
-                    }
-                    im.setLore(lore);
-                    is.setItemMeta(im);
+                if(offsetCount < offset) {
+                    offsetCount++;
+                    continue;
                 }
-                inventory.setItem(i, is);
+                if(i >= 36) break;
+                if(t.getID().equals(playerPreference)) {
+                    addItem(i, t.getIcon(), "§e§l" + t.getID(), " %nl%§aSELECTED!");
+                } else {
+                    addItem(i, t.getIcon(), "§e§l" + t.getID(), " %nl%§aCLICK TO SELECT!");
+                }
                 i++;
             }
+            if(playerAvailableTrails.size() > offset + 36) {
+                addItem(44, Material.ARROW, "§fNext page", null);
+            }
+            if(offset >= 36) {
+                addItem(36, Material.ARROW, "§fPrevious page", null);
+            }
+            addItem(40, Material.BARRIER, "§4Clear trails", "§cClear your trail preferences");
         } else {
-            ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
-            ItemMeta im = item.getItemMeta();
-            im.setDisplayName("§4No trails");
-            List<String> lore = new ArrayList<>();
-            lore.add("§cYou don't have any trails!");
-            im.setLore(lore);
-            item.setItemMeta(im);
-            inventory.setItem(22, item);
+            addItem(22, Material.RED_STAINED_GLASS_PANE, "§4No trails", "§cYou don't have any trails!");
         }
-        player.openInventory(inventory);
     }
 
-    public boolean isRegisteredInventory(Inventory inventory) {
-        return (getRegisteredInventory(inventory) != null);
-    }
-
-    @Nullable
-    public Inventory getRegisteredInventory(Inventory inventory) {
-        for(Inventory i : inventories) {
-            if(i.equals(inventory)) return inventory;
+    public void addItem(int slot, Material material, String name, String lore) {
+        ItemStack is = new ItemStack(material);
+        ItemMeta im = is.getItemMeta();
+        if(im != null) {
+            if(name != null) im.setDisplayName(name);
+            if(lore != null) {
+                String[] splitLore = lore.split("%nl%");
+                List<String> loreList = Arrays.asList(splitLore);
+                im.setLore(loreList);
+            }
+            is.setItemMeta(im);
         }
-        return null;
+        inventory.setItem(slot, is);
     }
 
-    public void removeInventory(Inventory inventory) {
-        int i = -1;
-        for(Inventory inv : inventories) {
-            i++;
-            if(inv.equals(inventory)) break;
+    public void click(int slot) {
+        if(playerAvailableTrails.size() < 1) return;
+        if(playerAvailableTrails.size() > offset + 36 && slot == 44) {
+            openGUI(offset + 36);
+            return;
         }
-        if(i >= 0) inventories.remove(i);
-    }
-
-    public void click(Player player, int slot) {
-        List<Trail> playerAvailableTrails = getPlayerAvailableTrails(player);
+        if(offset >= 36 && slot == 36) {
+            openGUI(offset - 36);
+            return;
+        }
+        if(slot == 40) {
+            plugin.getDataHandler().setPreference(player.getName(), null);
+            player.sendMessage("§aYou successfully cleared your trail preferences!");
+            player.closeInventory();
+            return;
+        }
         int i = 0;
+        int offsetCount = 0;
         for(Trail t : playerAvailableTrails) {
+            if(offsetCount < offset) {
+                offsetCount++;
+                continue;
+            }
             if(i == slot) {
                 plugin.getDataHandler().setPreference(player.getName(), t.getID());
                 player.sendMessage("§aYou set trail to: " + t.getID());
@@ -94,7 +116,7 @@ public class GUIHandler {
         }
     }
 
-    public List<Trail> getPlayerAvailableTrails(Player player) {
+    public List<Trail> getPlayerAvailableTrails() {
         List<Trail> playerAvailableTrails = new ArrayList<>();
         for(String id : plugin.getTrailsManager().getTrails().keySet()) {
             Trail t = plugin.getTrailsManager().getTrails().get(id);

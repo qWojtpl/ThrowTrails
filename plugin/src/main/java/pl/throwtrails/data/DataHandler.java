@@ -34,14 +34,13 @@ public class DataHandler {
         for(String key : section.getKeys(false)) {
             String path = "trails." + key + ".";
             String iconStr = yml.getString(path + "icon");
-            Material m = Material.DIRT;
+            Material icon = Material.DIRT;
             if (iconStr != null) {
-                m = Material.getMaterial(iconStr);
-                if(m == null) {
-                    m = Material.DIRT;
+                icon = Material.getMaterial(iconStr);
+                if(icon == null) {
+                    icon = Material.DIRT;
                 }
             }
-            ItemStack icon = new ItemStack(m);
             boolean loop = yml.getBoolean(path + "loop");
             String permission = yml.getString(path + "permission");
             int delay = yml.getInt(path + "delay");

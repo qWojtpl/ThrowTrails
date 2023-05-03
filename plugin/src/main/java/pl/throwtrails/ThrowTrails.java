@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.throwtrails.commands.Commands;
 import pl.throwtrails.commands.GUIHandler;
+import pl.throwtrails.commands.GUIManager;
 import pl.throwtrails.data.DataHandler;
 import pl.throwtrails.events.Events;
 import pl.throwtrails.trails.TrailsManager;
@@ -14,7 +15,7 @@ public final class ThrowTrails extends JavaPlugin {
     private static ThrowTrails main;
     private TrailsManager trailsManager;
     private DataHandler dataHandler;
-    private GUIHandler GUIHandler;
+    private GUIManager GUIManager;
     private Events events;
 
     @Override
@@ -22,7 +23,7 @@ public final class ThrowTrails extends JavaPlugin {
         main = this;
         this.trailsManager = new TrailsManager();
         this.dataHandler = new DataHandler();
-        this.GUIHandler = new GUIHandler();
+        this.GUIManager = new GUIManager();
         dataHandler.loadConfig();
         this.events = new Events();
         getServer().getPluginManager().registerEvents(events, this);
@@ -32,6 +33,9 @@ public final class ThrowTrails extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for(GUIHandler gui : getGUIManager().getGUIs()) {
+            gui.getPlayer().closeInventory();
+        }
         getDataHandler().save();
         getLogger().info("Disabled.");
     }

@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import pl.throwtrails.ThrowTrails;
+import pl.throwtrails.commands.GUIHandler;
 import pl.throwtrails.data.DataHandler;
 import pl.throwtrails.trails.Trail;
 
@@ -48,20 +49,21 @@ public class Events implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if(plugin.getGUIHandler().isRegisteredInventory(event.getInventory())) {
+        GUIHandler gui = plugin.getGUIManager().getHandler(event.getInventory());
+        if(gui != null) {
             event.setCancelled(true);
-            plugin.getGUIHandler().click((Player) event.getWhoClicked(), event.getSlot());
+            gui.click(event.getSlot());
         }
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if(plugin.getGUIHandler().isRegisteredInventory(event.getInventory())) event.setCancelled(true);
+        if(plugin.getGUIManager().isFromHandler(event.getInventory())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        plugin.getGUIHandler().removeInventory(event.getInventory());
+        plugin.getGUIManager().removeHandler(event.getInventory());
     }
 
     // <----> GUI <---->

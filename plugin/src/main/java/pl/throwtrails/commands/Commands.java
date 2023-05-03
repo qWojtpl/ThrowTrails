@@ -25,7 +25,7 @@ public class Commands implements CommandExecutor {
             sender.sendMessage("§cYou must be a player!");
             return true;
         }
-        plugin.getGUIHandler().openGUI((Player) sender);
+        new GUIHandler((Player) sender);
         return true;
     }
 
