@@ -24,3 +24,14 @@ trails:
       - TRIDENT
     lifeCycle:
       - HEART
+  "&aSweet lava":
+    icon: LAVA_BUCKET
+    loop: true
+    permission: throwtrails.use.lava
+    delay: 2
+    interval: 2
+    lifeCycle:
+      - LAVA/LAVA/LAVA
+      - HEART/HEART
+      - LAVA/LAVA
+      - HEART

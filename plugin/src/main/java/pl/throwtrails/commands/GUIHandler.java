@@ -54,9 +54,9 @@ public class GUIHandler {
                 }
                 if(i >= 36) break;
                 if(t.getID().equals(playerPreference)) {
-                    addItem(i, t.getIcon(), "§e§l" + t.getID(), dataHandler.getMessage("selected"));
+                    addItem(i, t.getIcon(), "§e§l" + t.getID().replace("&", "§"), dataHandler.getMessage("selected"));
                 } else {
-                    addItem(i, t.getIcon(), "§e§l" + t.getID(), dataHandler.getMessage("clickToSelect"));
+                    addItem(i, t.getIcon(), "§e§l" + t.getID().replace("&", "§"), dataHandler.getMessage("clickToSelect"));
                 }
                 i++;
             }
@@ -115,7 +115,8 @@ public class GUIHandler {
             }
             if(i == slot) {
                 plugin.getDataHandler().setPreference(player.getName(), t.getID());
-                player.sendMessage(MessageFormat.format(dataHandler.getMessage("setTrail"), t.getID()));
+                player.sendMessage(MessageFormat.format(dataHandler.getMessage("setTrail"),
+                        t.getID().replace("&", "§")));
                 player.closeInventory();
                 break;
             }
